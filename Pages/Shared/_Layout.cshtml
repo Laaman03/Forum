@@ -1,0 +1,32 @@
+﻿@using System.Security.Claims;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Forum</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <main role="main">
+        <div class="grid-header flex-container-row">
+            <span>Logo Here</span>
+            @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated!)
+            {
+                <span>
+                    @HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
+                </span>
+            }
+            else
+            {
+                <a asp-page="/Login">Login</a>
+            }
+        </div>
+        <div class="grid-main">
+            @RenderBody()
+        </div>
+        </main>
+</body>
+</html>

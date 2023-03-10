@@ -1,0 +1,82 @@
+:root {
+    --main-color: #FEFBE9;
+    --secondary-color: #E1EEDD;
+    --highlight-bright: #F0A04B;
+    --highligh-dark: #F0A04B;
+}
+
+html {
+  font-size: 14px;
+  font-family: sans-serif;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+main {
+    display: grid;
+    grid-template-rows:
+        20px auto;
+    grid-template-columns:
+        1fr 8fr 2fr;
+    grid-template-areas:
+        ". header ."
+        ". main right-sidebar";
+    column-gap: 10px;
+}
+
+.grid-header {
+    grid-area: header;
+    background-color: var(--secondary-color);
+}
+
+.grid-main {
+    grid-area: main;
+    background-color: var(--main-color);
+    padding: 4px;
+}
+
+.grid-right-sidebar {
+    grid-area: right-sidebar;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.flex-container-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-login {
+    display: grid;
+    grid: auto-flow / repeat(2, max-content);
+    gap: 5px;
+}
+
+.post-preview {
+    padding: 3px;
+}
+
+.post-preview-details {
+    font-size: 12px;
+}

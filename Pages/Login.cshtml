@@ -1,0 +1,13 @@
+﻿@page
+@model Forum.Pages.LoginModel
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<form method="post" class="form-login">
+    <label asp-for="Input.UserName">username</label>
+    <input asp-for="Input.UserName" />
+    <label asp-for="Input.Password">password</label>
+    <input type="password" asp-for="Input.Password"/>
+    <button type="submit">Log In</button>
+</form>
