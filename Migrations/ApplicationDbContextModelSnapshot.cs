@@ -160,7 +160,7 @@ namespace Forum.Migrations
             modelBuilder.Entity("Forum.Models.Reply", b =>
                 {
                     b.HasOne("Forum.Models.Post", "Post")
-                        .WithMany()
+                        .WithMany("Replies")
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -176,6 +176,11 @@ namespace Forum.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Forum.Models.Post", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("Forum.Models.User", b =>

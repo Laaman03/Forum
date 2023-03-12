@@ -41,6 +41,12 @@ main {
     column-gap: 10px;
 }
 
+.home-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .grid-header {
     grid-area: header;
     background-color: var(--secondary-color);
@@ -49,20 +55,19 @@ main {
 .grid-main {
     grid-area: main;
     background-color: var(--main-color);
-    padding: 4px;
+    padding: 6px 4px;
 }
 
 .grid-right-sidebar {
     grid-area: right-sidebar;
 }
 
-.flex-container {
+.flex-column {
     display: flex;
     flex-direction: column;
-    gap: 10px;
 }
 
-.flex-container-row {
+.flex-space-between {
     display: flex;
     justify-content: space-between;
 }
@@ -73,10 +78,10 @@ main {
     gap: 5px;
 }
 
-.post-preview {
-    padding: 3px;
-}
-
 .post-preview-details {
     font-size: 12px;
+}
+
+.highlight-dark {
+    background-color: var(--highligh-dark)
 }

@@ -1,16 +1,18 @@
 ﻿@page
 @using System.Security.Claims;
 @using Forum.Extensions;
-@model IndexModel
+@model Forum.Pages.IndexModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Forum";
 }
-<div class="flex-container">
-    @foreach (var p in Model.Posts.Select((post, i) => new { post, i }))
+<div class="home-container">
+    @foreach (var p in Model.Posts.Select((post, i) => new { post, i, }))
     {
         <div class="post-preview">
-            <div class="post-preview-title">@(p.i + 1). <strong>@p.post.Title</strong></div>
+            <div class="post-preview-title">@(p.i + 1). 
+                <a asp-page="/Post/Index" asp-route-id="@p.post.ID">@p.post.Title</a>
+            </div>
             <div class="post-preview-content">@p.post.Content</div>
             <div class="post-preview-details">
                 @p.post.UserName | @p.post.Age.FormatAgo()

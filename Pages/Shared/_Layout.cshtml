@@ -11,8 +11,12 @@
 </head>
 <body>
     <main role="main">
-        <div class="grid-header flex-container-row">
-            <span>Logo Here</span>
+        <div class="grid-header flex-space-between">
+            <div>
+                <a asp-page="/Index">Home</a>
+                |
+                <span>submit</span>
+            </div>
             @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated!)
             {
                 <span>

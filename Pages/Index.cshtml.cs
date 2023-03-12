@@ -10,7 +10,7 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly PostService postService;
 
-    public List<PostPreview> Posts { get; set; }
+    public List<DTOs.PostPreview> Posts { get; set; }
 
     public IndexModel(ILogger<IndexModel> logger, PostService postService)
     {

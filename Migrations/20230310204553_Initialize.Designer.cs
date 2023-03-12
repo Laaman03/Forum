@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Forum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230308144343_Initialize")]
+    [Migration("20230310204553_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -163,7 +163,7 @@ namespace Forum.Migrations
             modelBuilder.Entity("Forum.Models.Reply", b =>
                 {
                     b.HasOne("Forum.Models.Post", "Post")
-                        .WithMany()
+                        .WithMany("Replies")
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -179,6 +179,11 @@ namespace Forum.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Forum.Models.Post", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("Forum.Models.User", b =>

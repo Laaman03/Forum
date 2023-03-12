@@ -1,0 +1,24 @@
+﻿@page
+@using Forum.Extensions;
+@model Forum.Pages.Post.IndexModel
+@{
+    // we know that Model.PostThread can't be null
+    var postThread = Model.PostThread!;
+    ViewData["Title"] = postThread.Title;
+}
+
+<h2>@postThread.Title</h2>
+<div class="flex-column">
+    @foreach (var reply in postThread.ReplySet)
+    {
+        <div class="flex-column">
+            <div class="flex-space-between highlight-dark">
+                <div>@reply.User | @reply.Age.FormatAgo()</div>
+                <div>#@reply.Position</div>
+            </div>
+            <div>
+                @reply.Content
+            </div>
+        </div>
+    }
+</div>

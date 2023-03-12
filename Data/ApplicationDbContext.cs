@@ -8,7 +8,7 @@ namespace Forum.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Reply> Replys { get; set; }
+        public DbSet<Reply> Replies { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<UserAuthentication> UserAuthentication { get; set; }
 
