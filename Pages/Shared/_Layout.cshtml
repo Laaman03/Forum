@@ -1,5 +1,15 @@
 ﻿@using System.Security.Claims;
+@using Microsoft.AspNetCore.Http.Extensions;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@{
+    var returnUrl = HttpContextAccessor.HttpContext.Request.GetEncodedPathAndQuery();
+    var loggedIn = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated!;
+    var userName = string.Empty;
+    if (loggedIn)
+    {
+        userName = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value!;
+    }
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,18 +24,30 @@
         <div class="grid-header flex-space-between">
             <div>
                 <a asp-page="/Index">Home</a>
-                |
-                <span>submit</span>
+                @if (loggedIn)
+                {
+                    <span>| <a asp-page="Post/Submit">submit</a></span>
+                }
             </div>
-            @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated!)
+            @if (loggedIn)
             {
                 <span>
-                    @HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
+                    @userName
+                    |
+                    <a asp-page="/Login" asp-route-returnurl="@returnUrl" asp-route-logout="true">Sign Out</a>
                 </span>
             }
             else
             {
-                <a asp-page="/Login">Login</a>
+                <span>
+                    <a asp-page="/Login" asp-route-returnurl="@returnUrl">
+                        Login
+                    </a>
+                    |
+                    <a asp-page="/Register" asp-route-returnurl="@returnUrl">
+                        Register
+                    </a>
+                </span>
             }
         </div>
         <div class="grid-main">

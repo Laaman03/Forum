@@ -7,18 +7,21 @@
     ViewData["Title"] = postThread.Title;
 }
 
-<h2>@postThread.Title</h2>
+<h3>@postThread.Title</h3>
 <div class="flex-column">
     @foreach (var reply in postThread.ReplySet)
     {
-        <div class="flex-column">
+        <div class="flex-column" id="@reply.Position">
             <div class="flex-space-between highlight-dark">
-                <div>@reply.User | @reply.Age.FormatAgo()</div>
-                <div>#@reply.Position</div>
+                <div class="details">@reply.User | @reply.Age.FormatAgo()</div>
+                <div>|#@reply.Position</div>
             </div>
-            <div>
-                @reply.Content
-            </div>
+            <div class="thread-content">@reply.Content</div>
         </div>
     }
 </div>
+<form method="post" class="form-reply">
+    <label class="highlight-dark" asp-for="ReplyContent">Reply</label>
+    <textarea asp-for="ReplyContent" rows="5"></textarea>
+    <button type="submit">Reply</button>
+</form>

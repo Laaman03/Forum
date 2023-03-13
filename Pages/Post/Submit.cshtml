@@ -1,0 +1,13 @@
+﻿@page
+@model Forum.Pages.Post.SubmitModel
+@{
+    ViewData["Title"] = "Submit";
+}
+
+<form method="post" class="form-submit-post">
+    <label class="highlight-dark" asp-for="Input.Title">Title</label>
+    <input type="text" asp-for="Input.Title" />
+    <label class="highlight-dark" asp-for="Input.Content">Text</label>
+    <textarea asp-for="Input.Content" rows="5"></textarea>
+    <button type="submit">Submit</button>
+</form>

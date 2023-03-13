@@ -8,41 +8,30 @@ using System.Security.Claims;
 
 namespace Forum.Pages
 {
-    public class LoginModel : PageModel
+    public class RegisterModel : PageModel
     {
         private UserAuthenticationService authenticationService;
 
         [BindProperty]
         public InputModel Input { get; set; }
 
-        [FromQuery(Name = "logout")]
-        public bool Logout { get; set; }
-
         [TempData]
         public string ErrorMessage { get; set; }
 
         public string ReturnUrl { get; set; }
 
-        public LoginModel(UserAuthenticationService authenticationService)
+        public RegisterModel(UserAuthenticationService authenticationService)
         {
             this.authenticationService = authenticationService;
         }
-        public async Task<IActionResult> OnGetAsync(string returnUrl)
+        public async Task OnGetAsync(string returnUrl)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
-            // clear the existing cookie
-            await HttpContext.SignOutAsync();
 
-            if (Logout)
-            {
-                return LocalRedirect(Url.GetLocalUrl(returnUrl));
-            }
-
-            ReturnUrl = returnUrl;
-            return Page();
+            ReturnUrl = ReturnUrl;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -50,21 +39,18 @@ namespace Forum.Pages
             ReturnUrl = returnUrl;
             if (ModelState.IsValid)
             {
-                var userResult = await authenticationService.AuthenticateUserAsync(Input.UserName, Input.Password);
-                var user = userResult.Value;
-                if (user == null)
+                var registerUserResult = await authenticationService.RegisterNewUserAsync(Input.UserName, Input.Password);
+                if (registerUserResult.Result == Result.Error)
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, registerUserResult.Message);
                     return Page();
                 }
+                // at this point we know the user was created
                 var claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Name, Input.UserName),
                 };
-                foreach (var role in user.UserRoles)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
-                }
+
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(

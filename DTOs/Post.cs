@@ -23,4 +23,10 @@
             public int Position { get; set; }
         }
     }
+
+    public class ReplyAdded
+    {
+        public int Page { get; set; }
+        public int Position { get; set; }
+    }
 }

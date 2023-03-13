@@ -13,8 +13,8 @@
             <div class="post-preview-title">@(p.i + 1). 
                 <a asp-page="/Post/Index" asp-route-id="@p.post.ID">@p.post.Title</a>
             </div>
-            <div class="post-preview-content">@p.post.Content</div>
-            <div class="post-preview-details">
+            <div>@p.post.Content</div>
+            <div class="details">
                 @p.post.UserName | @p.post.Age.FormatAgo()
             </div>
         </div>

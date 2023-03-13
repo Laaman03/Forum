@@ -10,7 +10,7 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly PostService postService;
 
-    public List<DTOs.PostPreview> Posts { get; set; }
+    public List<PostPreview> Posts { get; set; }
 
     public IndexModel(ILogger<IndexModel> logger, PostService postService)
     {
@@ -20,6 +20,7 @@ public class IndexModel : PageModel
 
     public async Task OnGet()
     {
-        Posts = await postService.GetRecentPostPreviews(10);
+        var posts = await postService.GetRecentPostPreviews(10);
+        Posts = posts.Value;
     }
 }
