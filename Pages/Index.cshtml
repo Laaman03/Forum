@@ -10,7 +10,7 @@
     @foreach (var p in Model.Posts.Select((post, i) => new { post, i, }))
     {
         <div class="post-preview">
-            <div class="post-preview-title">@(p.i + 1). 
+            <div class="post-preview-title"> 
                 <a asp-page="/Post/Index" asp-route-id="@p.post.ID">@p.post.Title</a>
             </div>
             <div>@p.post.Content</div>
@@ -19,4 +19,9 @@
             </div>
         </div>
     }
+    <div class="flex-center-children">
+        <a class="button" asp-page="/Index" asp-route-pagenum="@(@Model.PageNum + 1)">
+            More    
+        </a>
+    </div>
 </div>

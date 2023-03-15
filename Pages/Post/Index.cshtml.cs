@@ -21,6 +21,8 @@ namespace Forum.Pages.Post
         public string ReplyContent { get; set; }
 
         public PostThread? PostThread { get; set; }
+        public IEnumerable<NavigationButton> PrevButtons => prevButtons();
+        public IEnumerable<NavigationButton> NextButtons => nextButtons();
 
         public IndexModel(PostService postService)
         {
@@ -64,6 +66,48 @@ namespace Forum.Pages.Post
                 new { id = PostID, pagenum = addedReply.Page }, 
                 addedReply.Position.ToString()
             );
+        }
+
+        private IEnumerable<NavigationButton> prevButtons()
+        {
+            var prev = PageNum - 1;
+            if (prev == 1)
+            {
+                yield return new NavigationButton() { Type = NavigationButtonType.FIRST, PageNum = prev };
+            }
+            if (prev >= 2)
+            {
+                yield return new NavigationButton() { Type = NavigationButtonType.FIRST, PageNum = 1 };
+                yield return new NavigationButton() { Type = NavigationButtonType.PREV, PageNum = prev };
+            }
+        }
+
+        private IEnumerable<NavigationButton> nextButtons()
+        {
+            var remaining = PostThread.PageCount - PageNum;
+            if (remaining == 1)
+            {
+                yield return new NavigationButton() { Type = NavigationButtonType.LAST, PageNum = PostThread.PageCount };
+            }
+            if (remaining >= 2)
+            {
+                yield return new NavigationButton() { Type = NavigationButtonType.NEXT, PageNum = PageNum + 1 };
+                yield return new NavigationButton() { Type = NavigationButtonType.LAST, PageNum = PostThread.PageCount };
+            }
+        }
+
+        public class NavigationButton
+        {
+            public NavigationButtonType Type { get; set; }
+            public int PageNum { get; set; }
+        }
+
+        public enum NavigationButtonType
+        {
+            FIRST,
+            PREV,
+            NEXT,
+            LAST
         }
     }
 }

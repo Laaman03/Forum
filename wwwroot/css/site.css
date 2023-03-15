@@ -1,8 +1,8 @@
 :root {
-    --main-color: #FEFBE9;
-    --secondary-color: #E1EEDD;
-    --highlight-bright: #F0A04B;
-    --highligh-dark: #F0A04B;
+    --main-color: #FFF5E4;
+    --secondary-color: #FFE3E1;
+    --highlight-bright: #FFD1D1;
+    --highligh-dark: #FF9494;
 }
 
 html {
@@ -42,9 +42,12 @@ main {
 }
 
 @media (max-width: 768px) {
+    body {
+        margin: 0;
+    }
     main {
         grid-template-columns:
-            10px auto 10px;
+            3px auto 3px;
     }
     .grid-right-sidebar {
         display: none;
@@ -70,7 +73,7 @@ textarea {
 .grid-main {
     grid-area: main;
     background-color: var(--main-color);
-    padding: 6px 4px;
+    padding: 2px;
 }
 
 .grid-right-sidebar {
@@ -85,16 +88,26 @@ textarea {
 .thread-content {
     white-space: pre-wrap;
     padding: 5px 3px;
+    margin: 2px; 0;
+}
+
+.thread-item {
+    margin-bottom: 11px;
+}
+
+.thread-item:last-child {
+    margin-bottom: 25px;
+}
+
+.page-indicator {
+    font-size: 12px;
+    color: #313131;
 }
 
 .form-login {
     display: grid;
     grid: auto-flow / repeat(2, max-content);
     gap: 5px;
-}
-
-.form-reply {
-    margin-top: 5px;
 }
 
 .form-submit-post > *,
@@ -115,4 +128,17 @@ textarea {
 .flex-space-between {
     display: flex;
     justify-content: space-between;
+}
+
+.button {
+    font: bold 11px Arial;
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px;
+    margin: 2px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
 }

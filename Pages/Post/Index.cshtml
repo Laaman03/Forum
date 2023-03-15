@@ -1,17 +1,26 @@
 ﻿@page
 @using Forum.Extensions;
+@using static Forum.Pages.Post.IndexModel.NavigationButtonType;
 @model Forum.Pages.Post.IndexModel
 @{
     // we know that Model.PostThread can't be null
     var postThread = Model.PostThread!;
     ViewData["Title"] = postThread.Title;
-}
 
+    string NavButtonContent(IndexModel.NavigationButton navigationButton) => navigationButton.Type switch
+    {
+        FIRST => "First",
+        PREV => "Previous",
+        NEXT => "Next",
+        LAST => "Last",
+        _ => "ERR"
+    };
+}
 <h3>@postThread.Title</h3>
 <div class="flex-column">
     @foreach (var reply in postThread.ReplySet)
     {
-        <div class="flex-column" id="@reply.Position">
+        <div class="flex-column thread-item" id="@reply.Position">
             <div class="flex-space-between highlight-dark">
                 <div class="details">@reply.User | @reply.Age.FormatAgo()</div>
                 <div>|#@reply.Position</div>
@@ -20,8 +29,30 @@
         </div>
     }
 </div>
+@if (postThread.PageCount > 1)
+{
+    <div class="flex-space-between">
+        <div>
+            @foreach (var button in Model.PrevButtons)
+            {
+                <a class="button" asp-page="/Post/Index" asp-route-id="@Model.PostID" asp-route-pagenum="@button.PageNum">
+                    @NavButtonContent(button)
+                </a>
+            }
+        </div>
+        <div>
+            @foreach (var button in Model.NextButtons)
+            {
+                <a class="button" asp-page="/Post/Index" asp-route-id="@Model.PostID" asp-route-pagenum="@button.PageNum">
+                    @NavButtonContent(button)
+                </a>
+            }
+            <span class="page-indicator">Page @Model.PageNum of @Model.PostThread.PageCount</span>
+        </div>
+    </div>
+}
 <form method="post" class="form-reply">
-    <label class="highlight-dark" asp-for="ReplyContent">Reply</label>
+    <label asp-for="ReplyContent"><strong>Reply</strong></label>
     <textarea asp-for="ReplyContent" rows="5"></textarea>
     <button type="submit">Reply</button>
 </form>

@@ -13,6 +13,7 @@
     {
         public string Title { get; set; }
         public int ReplyCount { get; set; }
+        public int PageCount { get; set; }
         public List<Reply> ReplySet { get; set; }
 
         public class Reply

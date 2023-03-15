@@ -1,13 +1,15 @@
 ﻿using Forum.Data;
 using Forum.DTOs;
 using Forum.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Services
 {
     public class PostService
     {
-        private static int pageSize = 10;
+        private static int postPreviewPageSize = 10;
+        private static int postReplyPageSize = 10;
         private ApplicationDbContext context;
 
         public PostService(ApplicationDbContext context)
@@ -15,7 +17,7 @@ namespace Forum.Services
             this.context = context;
         }
 
-        public async Task<ServiceResult<List<PostPreview>>> GetRecentPostPreviews(int numOfPosts)
+        public async Task<ServiceResult<List<PostPreview>>> GetRecentPostPreviews(int pageNum)
         {
             var now = DateTime.UtcNow;
             var contentPreviewLength = 200;
@@ -24,7 +26,8 @@ namespace Forum.Services
             // if the length argument is greater than the string length
             var posts = await context.Posts
                 .OrderByDescending(p => p.ID)
-                .Take(numOfPosts)
+                .Skip((pageNum - 1) * postPreviewPageSize)
+                .Take(postPreviewPageSize)
                 .Select(p => new PostPreview()
                 {
                     ID = p.ID,
@@ -61,7 +64,7 @@ namespace Forum.Services
                     p.Title,
                     p.Content,
                     Age = now - p.CreateDate,
-                    ReplyCount = p.Replies.Count,
+                    ReplyCount = 1 + p.Replies.Count,
                 })
                 .FirstOrDefaultAsync();
             if (originalPost is null)
@@ -85,8 +88,8 @@ namespace Forum.Services
 
             var replies = await context.Replies
                 .Where(r => r.Post.ID == postId)
-                .Skip((page - 1) * pageSize - (includedOriginalPost ^ 1))
-                .Take(pageSize - includedOriginalPost)
+                .Skip((page - 1) * postReplyPageSize - (includedOriginalPost ^ 1))
+                .Take(postReplyPageSize - includedOriginalPost)
                 .OrderBy(r => r.ID)
                 .Select(r => new PostThread.Reply()
                 {
@@ -98,13 +101,14 @@ namespace Forum.Services
             threadReplies.AddRange(replies);
             for (var i = 0; i < threadReplies.Count; i++)
             {
-                threadReplies[i].Position = ((page-1) * pageSize) + i + 1;
+                threadReplies[i].Position = ((page-1) * postReplyPageSize) + i + 1;
             }
             var thread = new PostThread()
             {
                 Title = originalPost.Title,
                 ReplySet = threadReplies,
-                ReplyCount = threadReplies.Count,
+                ReplyCount = originalPost.ReplyCount,
+                PageCount = ((originalPost.ReplyCount - 1) / postReplyPageSize) + 1 ,
             };
             result.Value = thread;
             return result;
@@ -148,6 +152,8 @@ namespace Forum.Services
             var post = await context.Posts
                 .Where(p => p.ID == postID)
                 .Include(p => p.Replies)
+                .Select(p => 
+                    new {Post = p, ReplyCount = 2 + p.Replies.Count })
                 .FirstOrDefaultAsync();
             if (post is null)
             {
@@ -168,13 +174,10 @@ namespace Forum.Services
                 Content = replyContent,
                 CreateDate = DateTime.UtcNow,
             };
-            post.Replies.Add(newReply);
-            var replyCount = 2 + await context.Replies
-                .Where(r => r.Post.ID == postID)
-                .CountAsync();
+            post.Post.Replies.Add(newReply);
 
-            var page = (replyCount / (pageSize + 1)) + 1;
-            var position = ((replyCount - 1) % pageSize) + 1;
+            var page = (( post.ReplyCount - 1) / postReplyPageSize) + 1;
+            var position = ((post.ReplyCount - 1) % postReplyPageSize) + 1;
 
             await context.SaveChangesAsync();
 
